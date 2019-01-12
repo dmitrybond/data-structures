@@ -6,7 +6,7 @@ typedef struct{
     int payload;
     int* next;
 } node;
-
+sup dude
 typedef struct{
     int* first_pointer;
     int loglength;
