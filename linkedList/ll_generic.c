@@ -1,13 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-typedef struct node{
-    struct node *child;
-    void *value;
-} list;
-
-static list *get_last(list*);
+#include "ll_generic.h"
 
 list ll_init(void* val)
 {
@@ -20,8 +11,8 @@ list ll_init(void* val)
 void ll_push(list *l, void *val)
 {
 	list *tmp = get_last(l);
-	tmp -> child = malloc(sizeof(list)); // check NULL FIXME
-	if (!(tmp -> child)) exit(1);
+	tmp -> child = malloc(sizeof(list));
+	if (!(tmp -> child)) exit(EXIT_FAILURE);
 	memcpy(&(tmp -> child -> value), &val, sizeof(void *));
 	tmp -> child -> child = NULL;
 }
