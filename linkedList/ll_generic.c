@@ -1,5 +1,7 @@
 #include "ll_generic.h"
 
+static list* get_last(list*);
+
 list ll_init(void *val)
 {
 	list new_list;
@@ -44,7 +46,7 @@ void ll_pop(list *l)
 int ll_is_member(list *l, void *val, size_t elemSize)
 {
 	list *tmp = l;
-        int index = 0; //FIXME
+        int index = 0;
         do{
             if (memcmp(tmp -> value, val, elemSize) == 0)
                     return index;
@@ -53,6 +55,23 @@ int ll_is_member(list *l, void *val, size_t elemSize)
         return -1;
 }
     
+void ll_insert(list *l, void *val, int index) // FIXME fails when index is zero
+					      // write a (static?) f-n to push_from_start and call it
+					      // if index = 0. index = last works fine, but ensure some error checking, e.g. too high index. Is the last thing null-terminated? Also, use push if the index is last index
+{
+	list *tmp = l;
+	list *tmp2;
+	int current = 0;
+	while(tmp -> child != NULL && index > current){
+		tmp2 = tmp;
+		tmp = tmp -> child;
+		++current;
+	}
+	tmp2 -> child = malloc(sizeof(list));
+	if (!(tmp2 -> child)) exit(EXIT_FAILURE);
+	tmp2 -> child -> child = tmp;
+	memcpy(&(tmp2 -> child -> value), &val, sizeof(void *));
+}
 
 void ll_print_ints(list *l)
 {
