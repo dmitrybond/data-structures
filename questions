@@ -1,0 +1,2 @@
+If I make changes to the header file, and then run make, it says everything is up-to-date, ignoring the changes
+Weird stuff with static: unused function, it says

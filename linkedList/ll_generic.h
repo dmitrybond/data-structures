@@ -8,6 +8,8 @@ typedef struct node{
 } list;
 
 list ll_init(void*);
+static list* get_last(list*);
 void ll_push(list*, void*);
 void ll_pop(list*);
-static list* get_last(list*);
+int ll_is_member(list*, void*, size_t);
+void ll_print_ints(list*);

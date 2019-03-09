@@ -1,10 +1,11 @@
 CFLAGS=-Wall -g
-exec: main.o linked_list.o 
-	gcc $(CFLAGS) main.o linked_list.o -o exec
+CC=clang
+exec: main.o ll_generic.o 
+	$(CC) $(CFLAGS) ll_generic.o main.o -o exec
 main.o: main.c
-	gcc $(CFLAGS) -c main.c
-linked_list.o: linked_list.c
-	gcc $(CFLAGS) -c linked_list.c
+	$(CC) $(CFLAGS) -c main.c
+ll_generic.o: ll_generic.c
+	$(CC) $(CFLAGS) -c ll_generic.c
 clean:
 	rm *.o
 	rm exec

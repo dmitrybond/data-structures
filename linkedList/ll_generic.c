@@ -1,11 +1,19 @@
 #include "ll_generic.h"
 
-list ll_init(void* val)
+list ll_init(void *val)
 {
 	list new_list;
 	new_list.child = NULL;
 	memcpy(&(new_list.value), &val, sizeof(void *));
 	return new_list;
+}
+
+static list* get_last(list *l)
+{
+	list *tmp = l;
+	while(tmp -> child != NULL)
+		tmp = tmp -> child;
+	return tmp;
 }
 
 void ll_push(list *l, void *val)
@@ -33,13 +41,18 @@ void ll_pop(list *l)
 	tmp2 -> child = NULL;
 }	
 
-static list* get_last(list *l)
+int ll_is_member(list *l, void *val, size_t elemSize)
 {
 	list *tmp = l;
-	while(tmp -> child != NULL)
-		tmp = tmp -> child;
-	return tmp;
+        int index = 0; //FIXME
+        do{
+            if (memcmp(tmp -> value, val, elemSize) == 0)
+                    return index;
+            ++index;
+            } while((tmp = tmp -> child) != NULL);
+        return -1;
 }
+    
 
 void ll_print_ints(list *l)
 {
@@ -49,26 +62,4 @@ void ll_print_ints(list *l)
 		tmp = tmp -> child;
 	}
 	printf("%d\n", *(int*)tmp -> value);
-}
-
-int main()
-{
-	int a0 = 0;
-	int a1 = 1;
-	int a2 = 2;
-	int a3 = 3;
-	
-	list test = ll_init(&a0);
-	
-	ll_push(&test, &a1);
-	ll_push(&test, &a2);
-	ll_push(&test, &a3);
-	ll_pop(&test);
-	ll_pop(&test);
-	ll_pop(&test);
-	ll_pop(&test);
-
-	ll_print_ints(&test);
-
-	return 0;
 }

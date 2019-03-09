@@ -1,65 +1,36 @@
-//#include <stdio.h>
-#include "linked_list.h"
+#include "ll_generic.h"
 
-int main(){
-    list test;
-    ll_init(&test);
+int main()
+{
+	int a0 = 0;
+	int a1 = 1;
+	int a2 = 2;
+	int a3 = 3;
+	
+	list test = ll_init(&a0);
+	
+	ll_push(&test, &a1);
+	ll_push(&test, &a2);
+	ll_push(&test, &a3);
+        int answer = 5;
+        printf("answer = %d\n", answer); 
+        answer = ll_is_member(&test, &a0, sizeof(int));
+        printf("answer = %d\n", answer); 
+        answer = ll_is_member(&test, &a1, sizeof(int));
+        printf("answer = %d\n", answer); 
+        answer = ll_is_member(&test, &a2, sizeof(int));
+        printf("answer = %d\n", answer); 
+        answer = ll_is_member(&test, &a3, sizeof(int));
+        printf("answer = %d\n", answer); 
+        int fake = 77;
+        answer = ll_is_member(&test, &fake, sizeof(int));
+        printf("answer = %d\n", answer); 
+	//ll_pop(&test);
+	//ll_pop(&test);
+	//ll_pop(&test);
+	//ll_pop(&test);
 
-    ll_print(&test);
+	ll_print_ints(&test);
 
-    for (int i = 0; i < 5; ++i){
-        ll_append(&test, i*i);
-        ll_print(&test);
-        printf("Size is %d\n", test.sz);
-    }
-
-     ll_pop(&test);
-     ll_pop(&test);
-     ll_pop(&test);
-     ll_print(&test);
-     printf("Size is %d\n", test.sz);
-     ll_set(&test, 0, 11);
-     ll_set(&test, 1, 22);
-     ll_set(&test, 2, 33);
-     ll_set(&test, 3, 44);
-     ll_set(&test, 4, 55);
-     ll_dispose(&test);
-     ll_print(&test);
-     ll_set(&test, 5, 66);
-
-     for (int i = 0; i < 5; ++i){
-         ll_rm(&test, 0);
-         ll_print(&test);
-     }
-
-    ll_insert(&test, 3, 333);
-    ll_print(&test);
-    ll_insert(&test, 1, 111);
-    ll_print(&test);
-    ll_insert(&test, 7, 777);
-    ll_print(&test);
-    ll_insert(&test, 0, 1000);
-    ll_print(&test);
-
-    printf("********\n");
-    for (int i = 0; i < test.sz; ++i)
-        printf("test[%d] = %d\n", i, ll_get(&test, i));
-
-    printf("List size is %d\n", ll_size(&test));
-     node *tmp = test.parent;
-     while(tmp != NULL)
-         tmp = tmp -> child;
-
-    for (int i = 0; i < 9; ++i){
-        ll_pop(&test);
-        ll_print(&test);
-    }
-    
-    
-     printf("Value is %d; size is %d\n", test.parent -> value, test.sz);
-     printf("Value is %d; size is %d\n", test.parent -> child -> value, test.sz);
-     printf("Value is %d; size is %d\n", test.parent -> child -> child -> value, test.sz);
-     printf("Value is %d; size is %d\n", test.parent -> child -> child -> child -> value, test.sz);
-     printf("Peeking: last value is %d\n", ll_peek(&test)); 
-
+	return 0;
 }
