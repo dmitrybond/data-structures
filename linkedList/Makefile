@@ -1,5 +1,11 @@
 CFLAGS=-Wall -g
+UNAME := $(shell uname)
+ifeq ($(UNAME), Linux)
+CC=gcc
+endif
+ifeq ($(UNAME), Darwin)
 CC=clang
+endif
 exec: main.o ll_generic.o 
 	$(CC) $(CFLAGS) ll_generic.o main.o -o exec
 main.o: main.c
