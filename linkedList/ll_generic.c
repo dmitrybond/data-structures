@@ -1,6 +1,6 @@
 #include "ll_generic.h"
 
-static list* get_last(list*);
+static list *get_last(list*);
 
 list ll_init(void *val)
 {
@@ -10,7 +10,7 @@ list ll_init(void *val)
 	return new_list;
 }
 
-static list* get_last(list *l)
+static list *get_last(list *l)
 {
 	list *tmp = l;
 	while(tmp->child != NULL)
@@ -43,6 +43,18 @@ void ll_pop(list *l)
 	tmp2->child = NULL;
 }	
 
+void *ll_get(list *l, int index)
+{
+	list *tmp = l;
+	int count = 0;
+	while(tmp->child != NULL && count < index){
+		tmp = tmp->child;
+		++count;
+	}
+	return tmp->value;
+}
+
+/* If val is in the list, returns val's index, otherwise -1 */
 int ll_is_member(list *l, void *val, size_t elemSize)
 {
 	list *tmp = l;

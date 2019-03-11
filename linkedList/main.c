@@ -23,6 +23,20 @@ int main()
 
 	ll_print_ints(&test); // 68 0 68 68 1 68 2 68 3 
 
+	void* zeroth = ll_get(&test, 0);
+	void* first = ll_get(&test, 1);
+	void* second = ll_get(&test, 2);
+	void* third = ll_get(&test, 3);
+	void* eighth = ll_get(&test, 8);
+	ll_push(&test, &a0);
+	void* ninth = ll_get(&test, 9);
+	printf("Getting 0-th element: %d\n", *(int*)zeroth);
+	printf("Getting 1-th element: %d\n", *(int*)first);
+	printf("Getting 2-th element: %d\n", *(int*)second);
+	printf("Getting 3-th element: %d\n", *(int*)third);
+	printf("Getting 8-th element: %d\n", *(int*)eighth);
+	printf("Getting 9-th element: %d\n", *(int*)ninth);
+
 	return 0;
 }
         //int answer = 5;
