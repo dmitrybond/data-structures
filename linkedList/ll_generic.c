@@ -13,72 +13,79 @@ list ll_init(void *val)
 static list* get_last(list *l)
 {
 	list *tmp = l;
-	while(tmp -> child != NULL)
-		tmp = tmp -> child;
+	while(tmp->child != NULL)
+		tmp = tmp->child;
 	return tmp;
 }
 
 void ll_push(list *l, void *val)
 {
 	list *tmp = get_last(l);
-	tmp -> child = malloc(sizeof(list));
-	if (!(tmp -> child)) exit(EXIT_FAILURE);
-	memcpy(&(tmp -> child -> value), &val, sizeof(void *));
-	tmp -> child -> child = NULL;
+	tmp->child = malloc(sizeof(list));
+	if (!(tmp->child)) exit(EXIT_FAILURE);
+	memcpy(&(tmp->child->value), &val, sizeof(void *));
+	tmp->child->child = NULL;
 }
 
 void ll_pop(list *l)
 {
-	if(!(l -> child)){
+	if(!(l->child)){
 		fprintf(stderr, "ll_pop: popping off an empty list\n");
 		exit(EXIT_FAILURE);
 	}
 	list *tmp = l;
 	list *tmp2;
-	while(tmp -> child != NULL){
+	while(tmp->child != NULL){
 		tmp2 = tmp;
-		tmp = tmp -> child;
+		tmp = tmp->child;
 	}
-	free(tmp2 -> child);
-	tmp2 -> child = NULL;
+	free(tmp2->child);
+	tmp2->child = NULL;
 }	
 
 int ll_is_member(list *l, void *val, size_t elemSize)
 {
 	list *tmp = l;
-        int index = 0;
+	int index = 0;
         do{
-            if (memcmp(tmp -> value, val, elemSize) == 0)
+            if (memcmp(tmp->value, val, elemSize) == 0)
                     return index;
             ++index;
-            } while((tmp = tmp -> child) != NULL);
-        return -1;
+            } while((tmp = tmp->child) != NULL);
+        return NOT_FOUND;
 }
-    
-void ll_insert(list *l, void *val, int index) // FIXME fails when index is zero
-					      // write a (static?) f-n to push_from_start and call it
-					      // if index = 0. index = last works fine, but ensure some error checking, e.g. too high index. Is the last thing null-terminated? Also, use push if the index is last index
+
+void ll_insert(list *l, void *val, int index)
 {
+	if (index == 0){
+		void *tmpval = l->value;
+		list *tmpaddr = l->child;
+		memcpy(&(l->value), &val, sizeof(void *));
+		l->child = malloc(sizeof(list));
+		memcpy(&(l->child->value), &tmpval, sizeof(void *));
+		l->child->child = tmpaddr;
+		return;
+	}
 	list *tmp = l;
 	list *tmp2;
 	int current = 0;
-	while(tmp -> child != NULL && index > current){
+	while(tmp->child != NULL && index > current){
 		tmp2 = tmp;
-		tmp = tmp -> child;
+		tmp = tmp->child;
 		++current;
 	}
-	tmp2 -> child = malloc(sizeof(list));
-	if (!(tmp2 -> child)) exit(EXIT_FAILURE);
-	tmp2 -> child -> child = tmp;
-	memcpy(&(tmp2 -> child -> value), &val, sizeof(void *));
+	tmp2->child = malloc(sizeof(list));
+	if (!(tmp2->child)) exit(EXIT_FAILURE);
+	tmp2->child->child = tmp;
+	memcpy(&(tmp2->child->value), &val, sizeof(void *));
 }
 
 void ll_print_ints(list *l)
 {
 	list *tmp = l;
-	while(tmp -> child != NULL){
-		printf("%d\n", *(int*)tmp -> value);
-		tmp = tmp -> child;
+	while(tmp->child != NULL){
+		printf("%d\n", *(int*)tmp->value);
+		tmp = tmp->child;
 	}
-	printf("%d\n", *(int*)tmp -> value);
+	printf("%d\n", *(int*)tmp->value);
 }

@@ -19,8 +19,9 @@ int main()
 	ll_insert(&test, &a_insert, 4);
 	ll_insert(&test, &a_insert, 3);
 	ll_insert(&test, &a_insert, 2);
+	ll_insert(&test, &a_insert, 0);
 
-	ll_print_ints(&test); // 0 68 68 1 68 2 68 3 
+	ll_print_ints(&test); // 68 0 68 68 1 68 2 68 3 
 
 	return 0;
 }
