@@ -14,7 +14,7 @@ main.o: main.c
 	$(CC) $(CFLAGS) -c main.c
 ll.o: ll.c
 	$(CC) $(CFLAGS) -c ll.c
-ll_cpp:
+ll_cpp: ll.cpp
 	$(CPP) $(CFLAGS) ll.cpp -o ll_cpp
 clean:
 	rm *.o

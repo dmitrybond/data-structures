@@ -2,28 +2,44 @@
 #include <cstdlib>
 #include <string>
 
+/*TODO add int length() */
+
 template <typename T>
 class LinkedList
 {
 	private:
 		T value;
-		LinkedList* next;
+		LinkedList<T>* next;
 
 	public:
 		LinkedList();
 		~LinkedList();
 		void push(T);
 		void pop();
+		bool is_empty();
+		size_t length();
 		T operator[](int);
-		void print();
+		template <typename S>
+		friend std::ostream& operator<<(std::ostream&, LinkedList<S>);
+		/* friend is used to declare a non-member function with a
+		 * permission to access this class' private attribues.
+		 * Note, I need to use the template with a different
+		 * identifier (not T; S in this case) otherwise it
+		 * 'shadows' the identifier (T in this case) of the
+		 * class
+		 */
 };
 
 template <typename T>
 LinkedList<T>::LinkedList()
 {
-	/* the base does not store a value, i.e. an empty list's 'next'
-	 * field is NULL and the 'value' field is never set, i.e. it's
-	 * garbage
+	/* the parent node does not store a value, so empty list's
+	 * 'value' field is garbage; obj[0] is therefore the first
+	 * child's value, not parent's value. Such implementation
+	 * ensures consistency in allocation/deallocation. Also,
+	 * this->next == NULL guarantees that the list is empty,
+	 * which wouldn't be the case if the first element was
+	 * stored in the parent node.
 	 */
 	this->next = NULL;
 }
@@ -57,6 +73,28 @@ void LinkedList<T>::pop()
 }
 
 template <typename T>
+bool LinkedList<T>::is_empty()
+{
+	if(this->next == NULL)
+		return true;
+	return false;
+}
+
+template <typename T>
+size_t LinkedList<T>::length()
+{
+	if(this->next == NULL)
+		return 0;
+	LinkedList<T>* curr = this;
+	size_t curr_index = 0;
+	while (curr->next != NULL){
+		curr_index++;
+		curr = curr->next;
+	}
+	return curr_index;
+}
+
+template <typename T>
 T LinkedList<T>::operator[](int index)
 {
 	if(this->next == NULL)
@@ -72,16 +110,20 @@ T LinkedList<T>::operator[](int index)
 }
 
 template <typename T>
-void LinkedList<T>::print()
+std::ostream& operator<<(std::ostream& os, LinkedList<T> ll)
 {
-	LinkedList<T>* curr = this;
-	std::cout << "[ ";
+	LinkedList<T>* curr = &ll;
+	os << "[ ";
 	while (curr->next != NULL){
-		std::cout << curr->next->value << ", ";
+		os << curr->next->value << ", ";
 		curr = curr->next;
 	}
-	std::cout << "]" << std::endl;
+	os << "]";
+	return os;
 }
+
+/* ======================================================================== */
+/* ==================================TESTS================================= */
 
 void test_integers()
 {
@@ -91,22 +133,26 @@ void test_integers()
 		<< "a list of integers" << std::endl;
 	for (int i = 0; i < 5; i++)
 		test1.push(i*i);
-	test1.print();
+	std::cout << test1 << "; Length = " << test1.length() << std::endl;
 	std::cout << "Popping off all elements from the list "
 		<< "plus one more to trigger an exception" << std::endl;
 	try{
-	for (int i = 0; i < 6; i++){
-		test1.pop();
-		test1.print();
-	}
+		for (int i = 0; i < 6; i++){
+			test1.pop();
+			std::cout << test1 << "; Length = " << test1.length() << std::endl;
+		}
 	}
 	catch(std::range_error & e) {
 		std::cout << "Caught exception: " << e.what() << std::endl;
 		std::cout << "Adding '42' to my list" << std::endl;
 		test1.push(42);
+		std::cout << test1 << "; Length = " << test1.length() << std::endl;
 	}
-	test1.print();
-	std::cout << std::endl;
+	std::cout << "testing is_empty: " << test1.is_empty() << std::endl;
+	std::cout << "popping once: " << std::endl;
+	test1.pop();
+	std::cout << test1 << "; Length = " << test1.length() << std::endl;
+	std::cout << "testing is_empty again: " << test1.is_empty() << std::endl;
 }
 
 void test_strings()
@@ -120,26 +166,32 @@ void test_strings()
 		base += " whatup";
 		test2.push(base);
 	}
-	test2.print();
+	std::cout << test2 << "; Length = " << test2.length() << std::endl;
 	std::cout << "Popping off all elements from the list "
 		<< "plus one more to trigger an exception" << std::endl;
 	try{
-	for (int i = 0; i < 6; i++){
-		test2.pop();
-		test2.print();
+		for (int i = 0; i < 6; i++){
+			test2.pop();
+			std::cout << test2 << "; Length = " << test2.length() << std::endl;
 		}
 	}
 	catch(std::range_error & e) {
 		std::cout << "Caught exception: " << e.what() << std::endl;
 		std::cout << "Adding 'Howyadoing, mate?' to my list" << std::endl;
 		test2.push("Howyadoing, mate?");
-		test2.print();
+		std::cout << test2 << "; Length = " << test2.length() << std::endl;
 	}
+	std::cout << "testing is_empty: " << test2.is_empty() << std::endl;
+	std::cout << "popping once: " << std::endl;
+	test2.pop();
+	std::cout << test2 << "; Length = " << test2.length() << std::endl;
+	std::cout << "testing is_empty again: " << test2.is_empty() << std::endl;
 }
 
 void test()
 {
 	test_integers();
+	std::cout << std::endl;
 	test_strings();
 }
 
