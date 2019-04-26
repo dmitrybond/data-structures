@@ -1,4 +1,7 @@
-#include "ll_generic.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "ll.h"
 
 static list *get_last(list*);
 

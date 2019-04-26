@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
 #define NOT_FOUND -1
 
 typedef struct node{

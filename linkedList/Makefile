@@ -2,16 +2,22 @@ CFLAGS=-Wall -g
 UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
 CC=gcc
+CPP=g++
 endif
 ifeq ($(UNAME), Darwin)
 CC=clang
+CPP=clang++
 endif
-exec: main.o ll_generic.o 
-	$(CC) $(CFLAGS) ll_generic.o main.o -o exec
+ll_c: main.o ll.o 
+	$(CC) $(CFLAGS) ll.o main.o -o ll_c
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c
-ll_generic.o: ll_generic.c
-	$(CC) $(CFLAGS) -c ll_generic.c
+ll.o: ll.c
+	$(CC) $(CFLAGS) -c ll.c
+ll_cpp:
+	$(CPP) $(CFLAGS) ll.cpp -o ll_cpp
 clean:
 	rm *.o
-	rm exec
+	rm ll_c
+clean_cpp:
+	rm ll_cpp
