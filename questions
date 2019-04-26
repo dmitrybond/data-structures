@@ -1,3 +1,0 @@
-If I make changes to the header file, and then run make, it says everything is up-to-date, ignoring the changes
-Due to pass-by-value in C, I don't actually need to define tmp's. Can simply overwrite the address of linked list in every function, since I only overwrite the local variables
-Also, can implement everything in one loop while((tmp = tmp->child) != NULL). It's a well-known C idiom

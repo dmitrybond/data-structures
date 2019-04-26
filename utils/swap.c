@@ -11,13 +11,15 @@ void swap(void *vp1, void *vp2, int elemSize)
 	free(buffer);
 }
 
-int main()
+void test()
 {
 	int a = 3;
 	int b = 4;
-
 	swap(&a, &b, sizeof(int));
 	printf("a,b = 3,4 -> a,b = %d,%d\n", a, b);
+}
 
-	return 0;
+int main()
+{
+	test();
 }
