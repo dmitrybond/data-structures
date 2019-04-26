@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#include <vector>
 
 
 template <typename T>
@@ -20,7 +19,7 @@ class LinkedList
 		size_t length();
 		T operator[](int);
 		template <typename S>
-		friend std::ostream& operator<<(std::ostream&, LinkedList<S>);
+		friend std::ostream& operator<<(std::ostream&, LinkedList<S>&);
 		/* friend is used to declare a non-member function with a
 		 * permission to access this class' private attribues.
 		 * Note, I need to use the template with a different
@@ -47,28 +46,14 @@ LinkedList<T>::LinkedList()
 template <typename T>
 LinkedList<T>::~LinkedList()
 {
-//	/* here's how the destructor works. An array is dynamically created with
-//	 * the same size as that of the LinkedList. This array stores addresses
-//	 * of all nodes, which are obtained by traversing the LinkedList and
-//	 * storing them there temporarily. These addresses are then freed in
-//	 * a for loop one by one. The destructor has O(N) complexity plus O(N)
-//	 * space for the temporary array.
-//	 *
-//	 * Remark: I don't know if this leaks memory: valgrind or gcc have a bug
-//	 * or sth, so I don't know as of now how to test this.
-//	 * Remark2: I don't why, but the destructor doesn't work. I've no idea
-//	 * where's the mistake
-//	 */
-//	size_t len = this->length();
-//	std::vector<LinkedList<T>*> addresses(len);
-//	LinkedList<T>* curr = this;
-//	size_t curr_index = 0;
-//	while (curr->next != NULL){
-//		addresses[curr_index++] = curr->next;
-//		curr = curr->next;
-//	}
-//	for(size_t i = 0; i < len; i++)
-//		delete addresses[i];
+	LinkedList<T>* right = this->next;
+	LinkedList<T>* left = this;
+	while (right != NULL){
+		left = right;
+		right = right->next;
+		delete left;
+	}
+	this->next = NULL;
 }
 
 template <typename T>
@@ -78,7 +63,6 @@ void LinkedList<T>::push(T value)
 	while (curr->next != NULL)
 		curr = curr->next;
 	curr->next = new LinkedList<T>;
-	//curr->next = (LinkedList<T>*)malloc(sizeof(LinkedList));
 	curr->next->value = value;
 	curr->next->next = NULL;
 }
@@ -133,7 +117,7 @@ T LinkedList<T>::operator[](int index)
 }
 
 template <typename T>
-std::ostream& operator<<(std::ostream& os, LinkedList<T> ll)
+std::ostream& operator<<(std::ostream& os, LinkedList<T>& ll)
 {
 	LinkedList<T>* curr = &ll;
 	os << "[ ";
@@ -160,7 +144,7 @@ void test_integers()
 	std::cout << "Popping off all elements from the list "
 		<< "plus one more to trigger an exception" << std::endl;
 	try{
-		for (int i = 0; i < 6; i++){
+		for (int i = 0; i < 4; i++){
 			test1.pop();
 			std::cout << test1 << "; Length = " << test1.length() << std::endl;
 		}
