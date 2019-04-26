@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include <string>
 
-/*TODO add int length() */
 
 template <typename T>
 class LinkedList
@@ -47,6 +46,29 @@ LinkedList<T>::LinkedList()
 template <typename T>
 LinkedList<T>::~LinkedList()
 {
+	/* here's how the destructor works. An array is dynamically created with
+	 * the same size as that of the LinkedList. This array stores addresses
+	 * of all nodes, which are obtained by traversing the LinkedList and
+	 * storing them there temporarily. These addresses are then freed in
+	 * a for loop one by one. The destructor has O(N) complexity plus O(N)
+	 * space for the temporary array.
+	 *
+	 * Remark1: I do not use new and delete because I suck at C++ and have
+	 * no idea how they work. Hence good-ol' mallocs and frees.
+	 * Remark2: I don't know if this leaks memory: valgrind or gcc have a bug
+	 * or sth, so I don't know as of now how to test this.
+	 */
+	size_t len = this->length();
+	LinkedList<T>** addresses = (LinkedList<T>**)malloc(len * sizeof(LinkedList<T>*));
+	LinkedList<T>* curr = this;
+	size_t curr_index = 0;
+	while (curr->next != NULL){
+		addresses[curr_index++] = curr->next;
+		curr = curr->next;
+	}
+	for(size_t i = 0; i < len; i++)
+		free(addresses[i]);
+	free(addresses);
 }
 
 template <typename T>
@@ -55,7 +77,7 @@ void LinkedList<T>::push(T value)
 	LinkedList<T>* curr = this;
 	while (curr->next != NULL)
 		curr = curr->next;
-	curr->next = new LinkedList;
+	curr->next = (LinkedList<T>*)malloc(sizeof(LinkedList));
 	curr->next->value = value;
 	curr->next->next = NULL;
 }
@@ -195,7 +217,15 @@ void test()
 	test_strings();
 }
 
+void test_leak()
+{
+	LinkedList<int> test;
+	test.push(5);
+	std::cout << test << std::endl;
+}
+
 int main()
 {
 	test();
+	test_leak();
 }
