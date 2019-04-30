@@ -1,38 +1,36 @@
 #include <stdlib.h>
-#include <string.h>
+#include "stack_int.h"
 #include "assert.h"
 
-#include "stack.h"
-
-static void stack_grow(stack *s, size_t elem_size)
+static void stack_grow(stack *s)
 {
 	s->alloc_length *= GROWTH_RATE;
-	s->elems = realloc(s->elems, s->alloc_length * elem_size); 
+	s->elems = realloc(s->elems, s->alloc_length * sizeof(int)); 
 	assert(s->elems);
 }
 
-void stack_init(stack *s, size_t elem_size)
+void stack_init(stack *s)
 {
-	s->elems = malloc(BASE_SIZE * elem_size);
+	s->elems = malloc(BASE_SIZE * sizeof(int));
+	assert(s->elems);
 	s->alloc_length = BASE_SIZE;
 	s->length = 0;
 }
 
-void stack_push(stack *s, void *value, size_t elem_size)
+void stack_push(stack *s, int value)
 {
 	assert(s->alloc_length % BASE_SIZE == 0 && s->elems && s->length >= 0);
 	if (s->length == s->alloc_length){
-		stack_grow(s, elem_size);
+		stack_grow(s);
 	}
-	memcpy((char*)(s->elems) + elem_size * (s->length), &value, elem_size);
-	s->length++;
+	s->elems[s->length++] = value;
 }
 
-void stack_pop(stack *s, size_t elem_size)
+void stack_pop(stack *s)
 {
 	assert(s->length>0);
 	if (s->length == 1){
-		s->elems = realloc(s->elems, BASE_SIZE * elem_size);
+		s->elems = realloc(s->elems, BASE_SIZE * sizeof(int));
 		assert(s->elems);
 		s->length--;
 		s->alloc_length = BASE_SIZE;
@@ -40,7 +38,7 @@ void stack_pop(stack *s, size_t elem_size)
 	}
 	if(s->alloc_length % (s->length - 1) == 0 && s->length > BASE_SIZE){
 		s->alloc_length /= GROWTH_RATE;
-		s->elems = realloc(s->elems, s->alloc_length * elem_size);
+		s->elems = realloc(s->elems, s->alloc_length * sizeof(int));
 		assert(s->elems);
 	}
 	s->length--;
