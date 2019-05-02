@@ -4,6 +4,22 @@
 
 #include "stack.h"
 
+/* Remark: the destructor stack_dispose is naive in the sense that it will
+ * NOT free memory occupied by the stack's elements, IF THESE ELEMENTS
+ * LIVE ON THE HEAP. It is therefore assumed that all elements pushed
+ * onto the stack are STATIC (as far as destruction goes, you can
+ * obviously push anything, but it'll leak)
+ *
+ * A more technical implementation accounts for this subtlety.
+ * I'm lazy to code this, but in words it goes something like this:
+ * Let the stack_dispose take in one more argument - a
+ * freeing function pointer. It is on behalf of the user to provide
+ * a freeing function to correctly destroy his/her heap objects. If
+ * the stack contains static elements, a user passes NULL as a freeing
+ * function to inform that all stack data is static and hence doesn't
+ * need any destruction beyond freeing stack.elems pointer.
+ */
+
 static void stack_grow(stack *s, size_t elem_size)
 {
 	s->alloc_length *= GROWTH_RATE;
