@@ -1,4 +1,4 @@
-FLAGS=-Wall -g -std=c++11
+FLAGS=-Wall -std=c++11
 UNAME := $(shell uname)
 
 ifeq ($(UNAME), Linux)

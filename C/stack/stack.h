@@ -1,6 +1,8 @@
 #define BASE_SIZE 4
 #define GROWTH_RATE 2
 
+/* Genertic stack implementation */
+
 typedef struct{
 	void *elems;
 	int length;

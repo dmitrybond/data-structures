@@ -1,6 +1,8 @@
 #define BASE_SIZE 4
 #define GROWTH_RATE 2
 
+/* (simpler) int-stack implementation */
+
 typedef struct{
 	int *elems;
 	int length;
