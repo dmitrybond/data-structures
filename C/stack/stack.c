@@ -8,7 +8,8 @@
  * NOT free memory occupied by the stack's elements, IF THESE ELEMENTS
  * LIVE ON THE HEAP. It is therefore assumed that all elements pushed
  * onto the stack are STATIC (as far as destruction goes, you can
- * obviously push anything, but it'll leak)
+ * obviously push anything, but it'll leak, unless you deallocate
+ * yourself)
  *
  * A more technical implementation accounts for this subtlety.
  * I'm lazy to code this, but in words it goes something like this:
@@ -46,14 +47,11 @@ void stack_push(stack *s, void *value, size_t elem_size)
 
 void stack_pop(stack *s, size_t elem_size)
 {
-	assert(s->length>0);
-	if (s->length == 1){
-		s->elems = realloc(s->elems, BASE_SIZE * elem_size);
-		assert(s->elems);
-		s->length--;
-		s->alloc_length = BASE_SIZE;
-		return;
-	}
+	assert(s->length > 0);
+	/* release half of the memory if s->length before popping is one
+	 * more than half of s->alloclength, except when s->length is less
+	 * than BASE_SIZE, since that's the minimum stack size
+	 */
 	if(s->alloc_length % (s->length - 1) == 0 && s->length > BASE_SIZE){
 		s->alloc_length /= GROWTH_RATE;
 		s->elems = realloc(s->elems, s->alloc_length * elem_size);
@@ -71,6 +69,9 @@ void stack_dispose(stack *s)
 	 * needs to be called even on a seemingly empty stack.
 	 */
 	free(s->elems);
+	/* not sure if there's any benefit in zeroing out the stack,
+	 * but what the hell
+	 */
 	s->elems = NULL;
 	s->alloc_length = 0;
 	s->length = 0;
